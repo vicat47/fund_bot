@@ -3,9 +3,11 @@ import requests
 from io import BytesIO
 
 class Fund:
+    '''
+    需要一个基金ID
+    '''
     def __init__(self, data):
         self.id = data.get('id')
-        self.user_id = data.get('user_id')
 
     def get_fund_url(self):
         return 'http://j4.dfcfw.com/charts/pic6/%s.png' % (self.id)
