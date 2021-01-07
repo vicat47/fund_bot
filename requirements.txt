@@ -1,0 +1,5 @@
+# PIL
+Flask
+requests
+SQLAlchemy
+APScheduler

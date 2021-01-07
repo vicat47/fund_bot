@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  my_funds:
+    dockerfile: .
+    ports: 
+      - 12345:5000
+    volumes: 
+      - ./data:/app/data
