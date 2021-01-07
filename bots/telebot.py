@@ -29,7 +29,3 @@ class TeleBot:
         url = 'https://api.telegram.org/bot%s/sendPhoto?chat_id=%s&photo=%s?v=%d' % (self.bot_id, self.chat_id, url, random.randint(10000000, 99999999))
         result = requests.post(url, proxies=TeleBot.proxies)
         return result
-
-if __name__ == "__main__":
-    res = TeleBot('1484376818:AAEI5hFVMt-T0ZRNgxt9ThskrDuXZd2Z0wo', '1408764137').send_image('http://j4.dfcfw.com/charts/pic6/000001.png')
-    print('123')
