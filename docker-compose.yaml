@@ -1,8 +1,10 @@
 version: '3.7'
 services:
   my_funds:
-    dockerfile: .
+    build: .
     ports: 
-      - 12345:5000
+      - 5000:5000
     volumes: 
       - ./data:/app/data
+    env_file: 
+      - ./data/proxy.env
