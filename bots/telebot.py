@@ -2,7 +2,7 @@ import requests
 import random
 from os import environ
 
-proxy_url = 'http://172.16.10.164:7890'
+proxy_url = 'http://192.168.2.20:7890'
 
 def get_proxy():
     proxies = {

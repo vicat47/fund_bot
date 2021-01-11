@@ -44,6 +44,7 @@ class DingBot:
         return requests.post(bot_url, headers=headers, json=data)
 
     async def async_send_image(self, url, session):
+        print('正在异步发送图片')
         bot_url = DingBot.BOT_URL % (self.bot_id)
         headers = {"Content-Type": "application/json"}
         data = {
@@ -54,4 +55,6 @@ class DingBot:
             }
         }
         async with session.post(bot_url, data=data, headers=headers) as res:
-            return await res.text()
+            txt = await res.text()
+            print(txt)
+            return txt
