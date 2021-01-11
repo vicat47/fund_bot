@@ -7,6 +7,9 @@ class WxBot:
         self.bot_id = bot_id
 
     def send_image(self, image):
+        '''
+        传入ByteIO对象
+        '''
         encodestr = base64.b64encode(image.getvalue())
         image_data = str(encodestr, 'utf-8')
         
@@ -24,5 +27,4 @@ class WxBot:
                 "md5": image_md5
             }
         }
-        result = requests.post(url, headers=headers, json=data)
-        return result
+        return requests.post(url, headers=headers, json=data)
