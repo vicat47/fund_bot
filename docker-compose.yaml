@@ -8,3 +8,4 @@ services:
       - ./data:/app/data
     env_file: 
       - ./data/proxy.env
+    container_name: fund

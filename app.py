@@ -73,7 +73,7 @@ def publish_fund_image():
             '''
             查找bots字典
             '''
-            bid, cid = user.get('bot_id'), user.get('chat_id')
+            bid, cid = user.bot_id, user.chat_id
             bot_key = '%s-%s' % (bid, cid)
             bot = bots.get(bot_key)
             if bot == None:
