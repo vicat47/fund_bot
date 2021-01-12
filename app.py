@@ -6,11 +6,14 @@ from bots.telebot import TeleBot
 from db_util import DB
 import services
 
+import asyncio
+
 from flask import Flask, request, render_template, session
 
 import json
 
 app = Flask(__name__)
+loop = asyncio.get_event_loop()
 db = DB('sqlite3', './data/my_fund.db')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -31,8 +34,8 @@ def publish_user_funds(user_id):
     bot = services.get_bot(user.get('bot_id'), user.get('chat_id'))
     for fund in funds:
         f = Fund(fund.get('id'))
-        services.send_fund_image(bot, f)
-    return '成功'
+        res = services.send_fund_image(bot, f)
+    return res.text()
 
 @app.route('/publish_fund_image/<name>', methods=['POST'])
 def publish_fund_image_by_name(name):
@@ -48,8 +51,26 @@ def publish_fund_image_by_name(name):
     bot = services.get_bot(user.get('bot_id'), user.get('chat_id'))
     for fund in funds:
         f = Fund(fund.get('id'))
-        services.send_fund_image(bot, f)
-    return '成功'
+        res = services.send_fund_image(bot, f)
+    return res.text()
+
+@app.route('/publish_fund_image/async/<name>', methods=['POST'])
+def async_publish_fund_image_by_name(name):
+    user = None
+    try:
+        user = next(db.select_data('select * from users where name = "%s"' % (name)))
+    except StopIteration:
+        return '没有用户名为%s的用户' % (name)
+    else:
+        if user == None:
+            return '没有用户名为%s的用户' % (name)
+    funds = db.select_data('select * from funds where user_id = %d;' % (user.get('id')))
+    bot = services.get_bot(user.get('bot_id'), user.get('chat_id'))
+    tasks = [services.async_send_image(bot, Fund(f.get('id'))) for f in funds]
+    group = asyncio.gather(*tasks, loop=loop)
+    res = loop.run_until_complete(group)
+    print(res)
+    return 'res'
 
 @app.route('/publish_fund_image', methods=['POST'])
 def publish_fund_image():
