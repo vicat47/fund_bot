@@ -37,5 +37,5 @@ class WxBot:
 
     async def async_send_image(self, image, session):
         bot_url, headers, data = self.get_image_data(image)
-        async with session.post(bot_url, headers=headers, data=data) as res:
+        async with session.post(bot_url, headers=headers, json=data) as res:
             return await res.text()

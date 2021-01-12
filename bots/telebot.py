@@ -2,7 +2,7 @@ import requests
 import random
 from os import environ
 
-proxy_url = 'http://192.168.2.20:7890'
+proxy_url = 'http://172.16.10.164:7890'
 
 def get_proxy():
     proxies = {
@@ -17,7 +17,7 @@ def get_proxy():
     return proxies
 
 class TeleBot:
-    BOT_URL = 'https://api.telegram.org/bot%s'
+    BOT_URL = 'http://api.telegram.org/bot%s'
     proxies = get_proxy()
     def __init__(self, bot_id, chat_id='1408764137'):
         self.bot_id = bot_id
@@ -32,6 +32,10 @@ class TeleBot:
 
     async def async_send_image(self, url, session):
         bot_url = (TeleBot.BOT_URL + '/sendPhoto?chat_id=%s&photo=%s?v=%d') % (self.bot_id, self.chat_id, url, random.randint(10000000, 99999999))
-        async with session.post(bot_url, proxy_url=TeleBot.proxies['http']) as res:
-            return await res.text()
-            
+        # conn=aiohttp.TCPConnector(verify_ssl=False)
+        # async with aiohttp.request('GET', bot_url, connector=conn, proxy=TeleBot.proxies['http']) as res:
+        #     return await res.text()
+        
+        # async with session.get(bot_url, proxy=TeleBot.proxies['http']) as res:
+        #     return await res.text()
+        return requests.post(bot_url, proxies=TeleBot.proxies)

@@ -13,8 +13,7 @@ from flask import Flask, request, render_template, session
 import json
 
 app = Flask(__name__)
-global loop
-loop = asyncio.new_event_loop()
+loop = asyncio.get_event_loop()
 db = DB('sqlite3', './data/my_fund.db')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -67,29 +66,11 @@ def async_publish_fund_image_by_name(name):
             return '没有用户名为%s的用户' % (name)
     funds = db.select_data('select * from funds where user_id = %d;' % (user.get('id')))
     bot = services.get_bot(user.get('bot_id'), user.get('chat_id'))
-    
-    tasks = [asend_fund_image(bot, Fund(f.get('id'))) for f in funds]
-    # loop.run_until_complete(asyncio.gather(*tasks))
-    asyncio.set_event_loop(loop)
-    
-    asyncio.
-    loop.run_until_complete(asyncio.gather(*tasks))
-    for fund in funds:
-        f = Fund(fund.get('id'))
-        print('正在查找基金' + fund.get('id'))
-        # tasks.append(services.async_send_image(bot, f))
-
-        # tasks.append(asend_fund_image(bot, f))
-        
-        # res = asyncio.run_coroutine_threadsafe(services.async_send_image(bot, f), clent_loop)
-        # res.result()
-    # res = loop.run_until_complete(asyncio.gather(
-        
-    # ))
-    return '成功'
-
-async def asend_fund_image(bot, fund):
-    return await services.async_send_image(bot, fund)
+    tasks = [services.async_send_image(bot, Fund(f.get('id'))) for f in funds]
+    group = asyncio.gather(*tasks, loop=loop)
+    res = loop.run_until_complete(group)
+    print(res)
+    return 'res'
 
 @app.route('/publish_fund_image', methods=['POST'])
 def publish_fund_image():

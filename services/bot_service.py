@@ -24,5 +24,11 @@ def get_fund_img(bot, fund):
     else:
         return fund.get_fund_url()
 
+async def aget_fund_img(bot, fund):
+    if isinstance(bot, bots.WxBot):
+        return await fund.aget_fund_byte(session)
+    else:
+        return fund.get_fund_url()
+
 async def async_send_image(bot, fund):
-    return await bot.async_send_image(get_fund_img(bot, fund), session)
+    return await bot.async_send_image(await aget_fund_img(bot, fund), session)

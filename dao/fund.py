@@ -1,4 +1,4 @@
-import requests
+import requests, asyncio, aiohttp
 # from PIL import Image
 from io import BytesIO
 
@@ -21,5 +21,11 @@ class Fund:
             self.cache = self.get_fund_data().content
         return BytesIO(self.cache)
 
+    async def aget_fund_byte(self, session):
+        if self.cache == None:
+            async with session.get('http://j4.dfcfw.com/charts/pic6/%s.png' % (self.id)) as res:
+                self.cache = await res.read()
+                return BytesIO(self.cache)
+                
     # def get_fund_img(self, fund_id):
     #     return Image.open(BytesIO(self.get_fund_data(fund_id).content))
