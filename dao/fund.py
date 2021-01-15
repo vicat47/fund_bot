@@ -1,6 +1,7 @@
 import requests, asyncio, aiohttp
 # from PIL import Image
 from io import BytesIO
+import math, time
 
 class Fund:
     '''
@@ -20,6 +21,10 @@ class Fund:
         if self.cache == None:
             self.cache = self.get_fund_data().content
         return BytesIO(self.cache)
+
+    async def get_fund_curr(self, session):
+        async with session.get('http://fundgz.1234567.com.cn/js/%s.js?rt=%d' % (self.id, math.floor(time.time() * 1000))) as res:
+            return await res.text()
 
     async def aget_fund_byte(self, session):
         if self.cache == None:

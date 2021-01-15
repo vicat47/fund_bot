@@ -36,6 +36,6 @@ class TeleBot:
         # async with aiohttp.request('GET', bot_url, connector=conn, proxy=TeleBot.proxies['http']) as res:
         #     return await res.text()
         
-        # async with session.get(bot_url, proxy=TeleBot.proxies['http']) as res:
-        #     return await res.text()
-        return requests.post(bot_url, proxies=TeleBot.proxies)
+        async with session.get(bot_url, proxy=TeleBot.proxies['http']) as res:
+            return await res.text()
+        # return requests.post(bot_url, proxies=TeleBot.proxies)

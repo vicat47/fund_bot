@@ -20,7 +20,7 @@ class DB:
             return res
 
     '''插入数据'''
-    def insert_data(self, table_name, data, sql):
+    def insert_data(self, table_name, data):
         colum, value = '', ''
         for k,v in data.items():
             if v == None or v == '' or v == 'None' or k == 'id':
@@ -38,6 +38,26 @@ class DB:
         with self.__db_module.connect(self.__db_name) as conn:
             c = conn.cursor()
             cursor = c.execute(insert_sql % (table_name, colum, value))
+            conn.commit()
+            return cursor.lastrowid
+
+    def delete_data(self, table_name, data):
+        del_value = ''
+        for k,v in data.items():
+            if v == None:
+                continue
+            del_value += '%s=' % (k)
+            if isinstance(v, int):
+                del_value += '%d and ' % (v)
+            elif isinstance(v, str) :
+                del_value += '"%s" and ' % (v)
+            else:
+                del_value += '"%s" and ' % (str(v))
+        del_value = del_value[0:-4]
+        delete_sql = 'DELETE FROM %s WHERE %s'
+        with self.__db_module.connect(self.__db_name) as conn:
+            c = conn.cursor()
+            cursor = c.execute(delete_sql % (table_name, del_value))
             conn.commit()
             return cursor.lastrowid
 

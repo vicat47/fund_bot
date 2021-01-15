@@ -26,10 +26,10 @@ def publish_user_funds(user_id):
     try:
         user = next(db.select_data('select * from users where id = %d' % (user_id)))
     except StopIteration:
-        return '没有id为%d的用户' % (user_id)
+        return {'status' : 'error', 'message' : '没有id为%d的用户' % (user_id)}
     else:
         if user == None:
-            return '没有该用户' % (user_id)
+            return {'status' : 'error', 'message' : '没有该用户' % (user_id)}
     funds = db.select_data('select * from funds where user_id = %d;' % (user_id))
     bot = services.get_bot(user.get('bot_id'), user.get('chat_id'))
     for fund in funds:
@@ -69,8 +69,7 @@ def async_publish_fund_image_by_name(name):
     tasks = [services.async_send_image(bot, Fund(f.get('id'))) for f in funds]
     group = asyncio.gather(*tasks, loop=loop)
     res = loop.run_until_complete(group)
-    print(res)
-    return 'res'
+    return str(res)
 
 @app.route('/publish_fund_image', methods=['POST'])
 def publish_fund_image():
@@ -101,6 +100,34 @@ def publish_fund_image():
                 bot = bots[bot_key] = services.get_bot(bid, cid)
             services.send_fund_image(bot, f)
     return '成功'
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = db.select_data('select * from users')
+    return users
+
+@app.route('/users/<int:user_id>/funds', methods=['GET'])
+def get_user_funds(user_id):
+    return db.select_data('select * from funds where user_id=%d;' % (user_id))
+
+@app.route('/users/<int:user_id>/funds', methods=['POST'])
+def add_user_funds(user_id):
+    'TODO'
+    data = json.loads(request.get_data(as_text=True))
+    return json.dumps([db.insert_data('funds', d) for d in data])
+
+@app.route('/users/<int:user_id>/funds/<fund_id>', methods=['POST'])
+def add_user_fund(user_id, fund_id):
+    return db.insert_data('funds', {'id': fund_id, 'user_id': user_id})
+
+@app.route('/users/<int:user_id>/funds/<fund_id>', methods=['DELETE'])
+def del_user_fund(user_id):
+    return db.delete_data('funds', {'id': fund_id, 'user_id': user_id})
+
+@app.route('/users/<int:user_id>/funds', methods=['DELETE'])
+def del_user_funds(user_id):
+    data = json.loads(request.get_data(as_text=True))
+    return [db.delete_data('funds', d) for d in data]
 
 def generate_fund_userlist(data):
     '''
