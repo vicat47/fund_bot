@@ -3,7 +3,7 @@ from dao.user import User
 # from scheduler import MyScheduler
 from bots.wxbot import WxBot
 from bots.telebot import TeleBot
-from db_util import DB
+from utils import DB
 import services
 
 import asyncio
@@ -121,7 +121,7 @@ def add_user_fund(user_id, fund_id):
     return db.insert_data('funds', {'id': fund_id, 'user_id': user_id})
 
 @app.route('/users/<int:user_id>/funds/<fund_id>', methods=['DELETE'])
-def del_user_fund(user_id):
+def del_user_fund(user_id, fund_id):
     return db.delete_data('funds', {'id': fund_id, 'user_id': user_id})
 
 @app.route('/users/<int:user_id>/funds', methods=['DELETE'])
