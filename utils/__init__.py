@@ -1,1 +1,1 @@
-from db_util import DB
+from .db_util import DB
