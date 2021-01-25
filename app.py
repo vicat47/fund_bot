@@ -35,7 +35,7 @@ def publish_user_funds(user_id):
     for fund in funds:
         f = Fund(fund.get('id'))
         res = services.send_fund_image(bot, f)
-    return res.text()
+    return res.text
 
 @app.route('/publish_fund_image/<name>', methods=['POST'])
 def publish_fund_image_by_name(name):
@@ -52,7 +52,7 @@ def publish_fund_image_by_name(name):
     for fund in funds:
         f = Fund(fund.get('id'))
         res = services.send_fund_image(bot, f)
-    return res.text()
+    return res.text
 
 @app.route('/publish_fund_image/async/<name>', methods=['POST'])
 def async_publish_fund_image_by_name(name):
