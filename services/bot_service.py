@@ -6,7 +6,7 @@ session = aiohttp.ClientSession()
 
 def get_bot(bot_id, chat_id=None):
     if len(bot_id) == 64:
-        return bots.DingBot(bot_id)
+        return bots.DingBot(bot_id, chat_id)
     elif chat_id == None:
         return bots.WxBot(bot_id)
     else:

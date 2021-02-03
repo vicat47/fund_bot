@@ -12,8 +12,9 @@ import aiohttp
 
 class DingBot:
     BOT_URL = 'https://oapi.dingtalk.com/robot/send?access_token=%s'
-    def __init__(self, bot_id):
+    def __init__(self, bot_id, secret):
         self.bot_id = bot_id
+        self.secret = secret
 
     def send_image(self, url):
         bot_url, headers, data = self.get_image_data(url)
@@ -53,7 +54,7 @@ class DingBot:
 
     def get_accessed_url(self):
         timestamp = str(round(time.time() * 1000))
-        secret = 'SEC0778946039e794a42fb6eff43836316cd1c8405bc6147354124b31e1ea26329c'
+        secret = self.secret
         secret_enc = secret.encode('utf-8')
         string_to_sign = '{}\n{}'.format(timestamp, secret)
         string_to_sign_enc = string_to_sign.encode('utf-8')
