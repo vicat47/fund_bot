@@ -9,3 +9,4 @@ services:
     env_file: 
       - ./data/proxy.env
     container_name: fund
+    restart: always
