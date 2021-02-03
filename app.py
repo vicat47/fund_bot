@@ -11,8 +11,10 @@ import asyncio
 from flask import Flask, request, render_template, session
 
 import json
+import logging
 
 app = Flask(__name__)
+logger = logging.getLogger('flask.app')
 loop = asyncio.get_event_loop()
 db = DB('sqlite3', './data/my_fund.db')
 
@@ -103,12 +105,15 @@ def publish_fund_image():
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    users = db.select_data('select * from users')
-    return users
+    users = list(db.select_data('select * from users'))
+    return str([(u.get('id'), u.get('name')) for u in users])
+
 
 @app.route('/users/<int:user_id>/funds', methods=['GET'])
 def get_user_funds(user_id):
-    return db.select_data('select * from funds where user_id=%d;' % (user_id))
+    res = list(db.select_data('select * from funds where user_id=%d;' % (user_id)))
+    return str([f.get('id') for f in res])
+
 
 @app.route('/users/<int:user_id>/funds', methods=['POST'])
 def add_user_funds(user_id):
