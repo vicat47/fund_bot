@@ -73,6 +73,39 @@ def async_publish_fund_image_by_name(name):
     res = loop.run_until_complete(group)
     return str(res)
 
+@app.route('/publish_fund_image/async', methods=['POST'])
+def publish_fund_image_async():
+    '''
+    向所有的bot发送基金曲线
+    通过库中查询后提交
+    因为基金图片要请求网络，所以通过基金来遍历
+    '''
+    res = db.select_data('select f.id, f.user_id, u.name, u.bot_id, u.chat_id from funds f, users u where f.user_id = u.id;')
+    '''
+    构造bot字典：{
+        bot_id-chat_id : Bot对象
+    }
+    '''
+    funds = generate_fund_userlist(res)
+    bots = dict()
+    tasks = []
+    print(funds)
+    for fund_id, user_list in funds.items():
+        f = Fund(fund_id)
+        for user in user_list:
+            '''
+            查找bots字典
+            '''
+            bid, cid = user.bot_id, user.chat_id
+            bot_key = '%s-%s' % (bid, cid)
+            bot = bots.get(bot_key)
+            if bot == None:
+                bot = bots[bot_key] = services.get_bot(bid, cid)
+            tasks.append(services.async_send_image(bot, f))
+    group = asyncio.gather(*tasks, loop=loop)
+    res = loop.run_until_complete(group)
+    return str(res)
+
 @app.route('/publish_fund_image', methods=['POST'])
 def publish_fund_image():
     '''
