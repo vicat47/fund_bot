@@ -7,6 +7,7 @@
 ## 项目包结构
 ```
 ---bots
+ |-- dingbot        钉钉发送图片方式 (webHook)
  |-- telebot        telegram 发送图片方式（WebHook）
  |-- wxbot          企业微信发送图片方式  （webhook）
 ---dao
