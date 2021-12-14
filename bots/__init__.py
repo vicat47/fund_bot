@@ -1,3 +1,3 @@
 from .telebot import TeleBot
-from .wxbot import WxBot
+from .wxworkbot import WxWorkBot
 from .dingbot import DingBot
