@@ -1,7 +1,7 @@
 from dao.fund import Fund
 from dao.user import User
 # from scheduler import MyScheduler
-from bots.wxbot import WxBot
+from bots.wxworkbot import WxWorkBot
 from bots.telebot import TeleBot
 from utils import DB
 import services

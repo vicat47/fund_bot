@@ -8,7 +8,7 @@ def get_bot(bot_id, chat_id=None):
     if len(bot_id) == 64:
         return bots.DingBot(bot_id, chat_id)
     elif chat_id == None:
-        return bots.WxBot(bot_id)
+        return bots.WxWorkBot(bot_id)
     else:
         return bots.TeleBot(bot_id, chat_id)
 
@@ -19,13 +19,13 @@ def send_image(bot, img):
     return bot.send_image(img)
 
 def get_fund_img(bot, fund):
-    if isinstance(bot, bots.WxBot):
+    if isinstance(bot, bots.WxWorkBot):
         return fund.get_fund_byte()
     else:
         return fund.get_fund_url()
 
 async def aget_fund_img(bot, fund):
-    if isinstance(bot, bots.WxBot):
+    if isinstance(bot, bots.WxWorkBot):
         return await fund.aget_fund_byte(session)
     else:
         return fund.get_fund_url()

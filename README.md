@@ -9,7 +9,7 @@
 ---bots
  |-- dingbot        钉钉发送图片方式 (webHook)
  |-- telebot        telegram 发送图片方式（WebHook）
- |-- wxbot          企业微信发送图片方式  （webhook）
+ |-- wxworkbot      企业微信发送图片方式  （webhook）
 ---dao
  |-- fund           基金的基类，实现了获取图片的功能
  |-- user           用户的基类，存储用户的信息
